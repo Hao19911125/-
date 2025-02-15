@@ -1,0 +1,30 @@
+{
+    "name": "图片生成",  // 例如 "AI Image Generation"
+    "description": "使用 SD, NovelAI, 或 ComfyUI 生成图像的扩展。", // 你的扩展描述
+    "version": "1.0",      // 你的扩展版本号
+    "author": "Hao",   // 你的名字或 GitHub 用户名
+    "type": "world",       // 扩展类型，这里通常是 "world" 或 "functional"
+
+    "scripts": [
+        "script.js"        // 你的 JavaScript 代码文件
+    ],
+    "css": [
+        "style.css"         // 你的 CSS 样式文件 (如果存在)
+    ],
+
+    "settings": [          // 扩展的设置选项 (复制 config.json 中的 settings 数组内容)
+        {
+            "id": "scriptEnabled",
+            "type": "checkbox",
+            "label": "启用脚本",
+            "default": false
+        },
+        // ... (复制 config.json 中 "settings" 数组的其余部分)
+        {
+            "id": "worker",
+            "type": "text",
+            "label": "worker",
+            "default": "{...}"
+        }
+    ]
+}
