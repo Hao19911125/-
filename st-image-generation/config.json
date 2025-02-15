@@ -1,0 +1,531 @@
+{
+    "name": "图片生成",
+    "description": "使用 SD, NovelAI, 或 ComfyUI 生成图像的扩展。",
+    "version": "1.0",
+    "author": "皓",
+    "type": "world",
+
+ "css": [
+        "style.css"
+    ],
+
+    "settings": [
+        {
+            "id": "scriptEnabled",
+            "type": "checkbox",
+            "label": "启用脚本",
+            "default": false
+        },
+        {
+            "id": "yushe",
+            "type": "text",
+            "label": "预设",
+            "default": "{\"默认\":{\"fixedPrompt\":\"\",\"negativePrompt\":\"\"}}"
+        },
+      {
+            "id": "yusheid",
+            "type": "text",
+            "label": "预设id",
+            "default": "默认"
+        },
+        {
+            "id": "mode",
+            "type": "select",
+            "label": "模式",
+            "options": [
+                {"value": "sd", "label": "SD"},
+                {"value": "novelai", "label": "NovelAI"},
+                {"value": "comfyui", "label": "ComfyUI"},
+                {"value": "free", "label": "Free"}
+            ],
+            "default": "free"
+        },
+        {
+            "id": "freeMode",
+            "type": "select",
+            "label": "Free Mode",
+            "options": [
+                {"value": "flux", "label": "flux"},
+                {"value": "flux-realism", "label": "flux-realism"},
+                {"value": "flux-anime", "label": "flux-anime"},
+                {"value": "flux-3d", "label": "flux-3d"},
+                {"value": "any-dark", "label": "any-dark"},
+                {"value": "turbo", "label": "turbo"},
+                {"value": "flux-pro", "label": "flux-pro"},
+                {"value": "flux-cablyai", "label": "flux-cablyai"}
+            ],
+            "default": "flux-anime"
+        },
+          {
+            "id": "dbclike",
+            "type": "select",
+            "label": "隐藏按钮为双击图片",
+             "options": [
+                {"value": "true", "label": "True"},
+                {"value": "false", "label": "False"}
+            ],
+            "default": "false"
+        },
+        {
+            "id": "cache",
+            "type": "select",
+            "label": "缓存",
+            "options": [
+                {"value": "0", "label": "不缓存"},
+                {"value": "1", "label": "缓存一天"},
+                {"value": "7", "label": "缓存一星期"},
+                {"value": "30", "label": "缓存一个月"},
+                {"value": "365", "label": "缓存一年"}
+            ],
+            "default": "1"
+        },
+        {
+            "id": "sdUrl",
+            "type": "text",
+            "label": "SD 或 ComfyUI URL",
+            "default": "http://localhost:7860"
+        },
+        {
+            "id": "novelaiApi",
+            "type": "text",
+            "label": "NovelAI API",
+            "default": "000000"
+        },
+        {
+            "id": "startTag",
+            "type": "text",
+            "label": "开始标记",
+            "default": "image###"
+        },
+        {
+            "id": "endTag",
+            "type": "text",
+            "label": "结束标记",
+            "default": "###"
+        },
+        {
+            "id": "fixedPrompt",
+            "type": "textarea",
+            "label": "固定正面提示词",
+            "default": ""
+        },
+         {
+            "id": "negativePrompt",
+            "type": "textarea",
+            "label": "固定负面提示词",
+            "default": ""
+        },
+        {
+            "id": "nai3Scale",
+            "type": "number",
+            "label": "NAI3 Scale",
+            "default": 10
+        },
+        {
+            "id": "sdCfgScale",
+            "type": "number",
+            "label": "SD/ComfyUI CFG Scale",
+            "default": 7
+        },
+        {
+          "id": "sm",
+          "type": "select",
+          "label": "Sm",
+          "options": [
+            {
+              "value": "true",
+              "label": "True"
+            },
+            {
+              "value": "false",
+              "label": "False"
+            }
+          ],
+          "default": "true"
+        },
+        {
+          "id": "dyn",
+          "type": "select",
+          "label": "Dyn",
+          "options": [
+            {
+              "value": "true",
+              "label": "True"
+            },
+            {
+              "value": "false",
+              "label": "False"
+            }
+          ],
+          "default": "true"
+        },
+        {
+            "id": "cfg_rescale",
+            "type": "number",
+            "label": "CFG Rescale",
+            "default": 0.18
+        },
+        {
+            "id": "UCP",
+            "type": "text",
+            "label": "负面预设",
+             "options": [
+                {"value": "lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract]", "label": "Heavy"},
+                {"value": "lowres, jpeg artifacts, worst quality, watermark, blurry, very displeasing", "label": "Light"},
+                {"value": "lowres, {bad}, error, fewer, extra, missing, worst quality, jpeg artifacts, bad quality, watermark, unfinished, displeasing, chromatic aberration, signature, extra digits, artistic error, username, scan, [abstract], bad anatomy, bad hands, @_@, mismatched pupils, heart-shaped pupils, glowing eyes", "label": "Human Focus"},
+                {"value": "bad proportions, out of focus, username, text, bad anatomy, lowres, worstquality, watermark, cropped, bad body, deformed, mutated, disfigured, poorly drawn face, malformed hands, extra arms, extra limb, missing limb, too many fingers, extra legs, bad feet, missing fingers, fused fingers, acnes, floating limbs, disconnected limbs, long neck, long body, mutation, ugly, blurry, low quality, sketches, normal quality, monochrome, grayscale, signature, logo, jpeg artifacts, unfinished, displeasing, chromatic aberration, extra digits, artistic error, scan, abstract, photo, realism, screencap", "label": "作者预设"},
+                {"value": "negativeXL_D, negativeXL, source_furry, extra limbs, deformations, long fingers, fused fingers, inaccurate_anatomy, bad proportions, poorly drawn hands, bad hands, extra_fingers, extra_hand, extra_arm, distorted fingers, ugly hands, creepy hands, six fingers, malformed fingers, long_fingers, interlocked fingers:1.2, ugly, deformed, uneven, asymmetrical, unnatural, missing fingers, extra digit, fewer digits, opaque eyes, small eyes, ugly eyes, blurred eyes, bad face, (bad anatomy, ugly face:1.2), (worst quality, low quality, not detailed, low resolution:1.2), motion_blur, blur, blur_censor, blurry, simple_background, text, error, cropped, normal quality, jpeg artifacts, watermark, logo, signature, username, artist name", "label": "作者预设2"},
+                {"value": "", "label": "无"}
+            ],
+            "default": ""
+        },
+        {
+            "id": "AQT",
+            "type": "text",
+            "label": "正面预设",
+            "options": [
+             {"value": "best quality, amazing quality, very aesthetic, absurdres", "label": "True"},
+             {"value": "", "label": "False"}
+             ],
+            "default": "best quality, amazing quality, very aesthetic, absurdres"
+        },
+        {
+            "id": "steps",
+            "type": "number",
+            "label": "Steps",
+            "default": 28
+        },
+        {
+            "id": "width",
+            "type": "number",
+            "label": "Width",
+            "default": 1024
+        },
+        {
+            "id": "height",
+            "type": "number",
+            "label": "Height",
+            "default": 1024
+        },
+        {
+            "id": "seed",
+            "type": "number",
+            "label": "Seed",
+            "default": 0
+        },
+         {
+            "id": "restoreFaces",
+            "type": "select",
+            "label": "Restore Faces",
+            "options": [
+                {"value": "true", "label": "True"},
+                {"value": "false", "label": "False"}
+            ],
+            "default": "false"
+        },
+          {
+            "id": "samplerName",
+            "type": "select",
+            "label": "Sampler Name (SD)",
+             "options": [
+              {
+                "value": "DPM++ 2M",
+                "label": "DPM++ 2M"
+              },
+              {
+                "value": "DPM++ SDE",
+                "label": "DPM++ SDE"
+              },
+              {
+                "value": "DPM++ 2M SDE",
+                "label": "DPM++ 2M SDE"
+              },
+              {
+                "value": "DPM++ 2M SDE Heun",
+                "label": "DPM++ 2M SDE Heun"
+              },
+              {
+                "value": "DPM++ 2S a",
+                "label": "DPM++ 2S a"
+              },
+              {
+                "value": "DPM++ 3M SDE",
+                "label": "DPM++ 3M SDE"
+              },
+              {
+                "value": "Euler a",
+                "label": "Euler a"
+              },
+              {
+                "value": "Euler",
+                "label": "Euler"
+              }
+            ],
+            "default": "DPM++ 2M"
+        },
+         {
+            "id": "comfyuisamplerName",
+            "type": "select",
+            "label": "Sampler Name (ComfyUI)",
+            "options": [
+              {
+                "value": "euler",
+                "label": "euler"
+              },
+              {
+                "value": "euler_cfg_pp",
+                "label": "euler_cfg_pp"
+              },
+              {
+                "value": "euler_ancestral",
+                "label": "euler_ancestral"
+              },
+              {
+                "value": "euler_ancestral_cfg_pp",
+                "label": "euler_ancestral_cfg_pp"
+              },
+              {
+                "value": "dpmpp_2s_ancestral",
+                "label": "dpmpp_2s_ancestral"
+              },
+              {
+                "value": "dpmpp_2m_sde",
+                "label": "dpmpp_2m_sde"
+              },
+              {
+                "value": "dpmpp_3m_sde",
+                "label": "dpmpp_3m_sde"
+              },
+              {
+                "value": "dpmpp_3m_sde_gpu",
+                "label": "dpmpp_3m_sde_gpu"
+              }
+            ],
+            "default": "euler_ancestral"
+        },
+
+        {
+          "id": "sampler",
+          "type": "select",
+          "label": "Sampler (NovelAI)",
+          "options": [
+            {
+              "value": "k_euler",
+              "label": "k_euler"
+            },
+            {
+              "value": "k_dpm_2",
+              "label": "k_dpm_2"
+            },
+            {
+              "value": "ddim_v3",
+              "label": "ddim_v3"
+            },
+            {
+              "value": "k_dpmpp_2s_ancestral",
+              "label": "k_dpmpp_2s_ancestral"
+            },
+            {
+              "value": "k_dpmpp_2m",
+              "label": "k_dpmpp_2m"
+            },
+            {
+              "value": "k_euler_ancestral",
+              "label": "k_euler_ancestral"
+            }
+          ],
+          "default": "k_euler"
+        },
+         {
+          "id": "Schedule",
+          "type": "select",
+          "label": "Schedule (NovelAI)",
+          "options": [
+            {
+              "value": "native",
+              "label": "native"
+            },
+            {
+              "value": "exponential",
+              "label": "exponential"
+            },
+            {
+              "value": "polyexponential",
+              "label": "polyexponential"
+            },
+            {
+              "value": "karras",
+              "label": "karras"
+            }
+          ],
+          "default": "native"
+        },
+        {
+            "id": "zidongdianji",
+            "type": "select",
+            "label": "自动点击生成",
+             "options": [
+                {"value": "true", "label": "True"},
+                {"value": "false", "label": "False"}
+            ],
+            "default": "true"
+        },
+         {
+          "id": "nai3VibeTransfer",
+          "type": "select",
+          "label": "Nai3 Vibe Transfer",
+          "options": [
+            {
+              "value": "true",
+              "label": "True"
+            },
+            {
+              "value": "false",
+              "label": "False"
+            }
+          ],
+          "default": "false"
+        },
+          {
+            "id": "InformationExtracted",
+            "type": "number",
+            "label": "Information Extracted",
+            "default": 0.3
+        },
+         {
+            "id": "ReferenceStrength",
+            "type": "number",
+            "label": "Reference Strength",
+            "default": 0.6
+        },
+          {
+            "id": "nai3Deceisp",
+            "type": "select",
+            "label": "Nai3 Deceisp",
+            "options": [
+              {
+                "value": "true",
+                "label": "True"
+              },
+              {
+                "value": "false",
+                "label": "False"
+              }
+            ],
+            "default": "true"
+          },
+          {
+            "id": "nai3Variety",
+            "type": "select",
+            "label": "Nai3 Variety",
+            "options": [
+              {
+                "value": "true",
+                "label": "True"
+              },
+              {
+                "value": "false",
+                "label": "False"
+              }
+            ],
+            "default": "true"
+          },
+          {
+            "id": "MODEL_NAME",
+            "type": "text",
+            "label": "Model Name (ComfyUI)",
+            "default": "your_model_name"
+          },
+          {
+            "id": "c_fenwei",
+            "type": "number",
+            "label": "氛围强度",
+            "default": 0.8
+          },
+          {
+            "id": "c_xijie",
+            "type": "number",
+            "label": "细节强度",
+            "default": 0.8
+          },
+          {
+            "id": "c_idquanzhong",
+            "type": "number",
+            "label": "faceid权重",
+            "default": 1.1
+          },
+          {
+            "id": "c_quanzhong",
+            "type": "number",
+            "label": "权重",
+            "default": 0.8
+          },
+           {
+            "id": "ipa",
+            "type": "select",
+            "label": "Ipa",
+             "options": [
+                {
+                  "value": "STANDARD (medium strength)",
+                  "label": "STANDARD (medium strength)"
+                },
+                {
+                  "value": "LIGHT - SD1.5 only (low strength)",
+                  "label": "LIGHT - SD1.5 only (low strength)"
+                },
+                {
+                  "value": "VIT-G (medium strength)",
+                  "label": "VIT-G (medium strength)"
+                },
+                {
+                  "value": "PLUS (high strength)",
+                  "label": "PLUS (high strength)"
+                },
+                {
+                  "value": "PLUS FACE (portraits)",
+                  "label": "PLUS FACE (portraits)"
+                },
+                {
+                  "value": "FULL FACE - SD1.5 only (portraits stronger)",
+                  "label": "FULL FACE - SD1.5 only (portraits stronger)"
+                }
+              ],
+            "default": "STANDARD (medium strength)"
+        },
+        {
+          "id": "novelaimode",
+          "type": "select",
+          "label": "Novelai Mode",
+          "options": [
+            {
+              "value": "nai-diffusion-3",
+              "label": "nai-diffusion-3"
+            },
+            {
+              "value": "nai-diffusion-4-curated-preview",
+              "label": "nai-diffusion-4-curated-preview"
+            }
+          ],
+          "default": "nai-diffusion-3"
+        },
+        {
+            "id": "workers",
+            "type": "text",
+            "label": "workers",
+            "default": "{\"默认\": ...,\"默认人物一致\": ..., \"面部细化\":...}"
+
+        },
+         {
+            "id": "workerid",
+            "type": "text",
+            "label": "workerid",
+            "default": "默认"
+        },
+        {
+            "id": "worker",
+            "type": "text",
+            "label": "worker",
+            "default": "{...}"
+        }
+    ]
+}
