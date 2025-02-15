@@ -1,0 +1,115 @@
+/* style.css */
+
+.button_image {
+    /* 基础样式 */
+    padding: 3px 4px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(99, 102, 241, 0.2);
+
+    /* 文本和图标布局 */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    /* 防止文本换行 */
+    white-space: nowrap;
+
+    /* 去除默认按钮样式 */
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+     }
+
+  #settings-panel input, #settings-panel select {
+    background-color: #444;
+    color: white;
+    background-color: black;
+    border: none;
+    padding: 5px;
+    margin: 5px 0;
+    white-space: nowrap;
+  }
+  .inline-elements div {
+  display: inline-block; /* 或者使用 display: flex; */
+  }
+  #settings-panel button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  #settings-panel button:hover {
+    background-color: #555;
+  }
+  #previewImage {
+  width: 20vh; /* 将图片宽度设置为视口高度的 80% */
+  height: auto; /* 根据宽度自适应高度，保持图片比例 */
+  display: block; /* 将图片显示为块级元素，便于居中 */
+}
+
+
+  #settings-panel input, #settings-panel select {
+    background-color: #444;
+    color: white;
+    background-color: black;
+    border: none;
+    padding: 5px;
+    margin: 5px 0;
+  }
+  #settings-panel button {
+    background-color: #444;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+  #settings-panel button:hover {
+    background-color: #555;
+  }
+  .switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+  }
+  .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+  }
+  .slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  input:checked + .slider {
+    background-color: #2196F3;
+  }
+  input:checked + .slider:before {
+    transform: translateX(26px);
+  }
